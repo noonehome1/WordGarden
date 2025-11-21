@@ -1,1 +1,12 @@
-["ABILITY", "AMBITION", "BORDER", "COAST", "DECAY", "DRIFT", "FRAIL", "INDIVIDUAL", "METHOD", "OPPOSITE", "PREDICT"]
+{
+    "games": [
+        ["ABILITY", "AMBITION", "BORDER", "COAST", "DECAY"],
+        ["DRIFT", "FRAIL", "INDIVIDUAL", "METHOD", "OPPOSITE", "PREDICT"],
+        ["ABSORB", "ANCIENT", "BRIEF", "CONFESS", "DEED"],
+        ["ELEGANT", "GASP", "INTELLIGENT", "MISERY", "ORDEAL", "PREVENT"],
+        ["A", "B", "C", "D", "E"],
+        ["F", "G", "H", "I", "J"],
+        ["K", "L", "M", "N", "O"],
+        ["P", "Q", "R", "S", "T"]
+    ]
+}

@@ -9,29 +9,50 @@ import SwiftUI
 import AVFAudio
 
 struct ContentView: View {
-    // Maximum number of guesses allowed
+    // Set based on number of images indicating game progression. Maximum number of missed guesses allowed. refer to as Self.maxNumberOfGuesses
     private static let maxNumberOfGuesses: Int = 8
+    private static let maxNumberOfLevelsInstalled = 3
+    private static let messageHowManyGuesses: String = "How Many Guesses to Uncover the Hidden Word?"
+    
+    private static let playAgainButtonLabelGuessALetter: String = "Guess a Letter"
+    private static let playAgainButtonLabelAnotherWord: String = "Another Word?"
+    private static let playAgainButtonLabelNextLevel: String = "Next Level?"
 
+    // Game Scoring
     @State private var wordsGuessed: Int = 0
     @State private var wordsMissed: Int = 0
     @State private var currentLevel: Int = 0
     @State private var currentGame: Int = 0
+    // Level Working Set
+    @State private var gameStatusMessage: String = ""
     @State private var wordsToGuess: [String] = []
     @State private var wordToGuess: String = ""
     @State private var lettersGuessed: String = ""
-    @State private var gameStatusMessage: String = "How Many Guesses to Uncover the Hidden Word?"
     @State private var guessedLetter: String = ""
-    @State private var guessesRemaining: Int = 8
+    @State private var guessesRemaining: Int = 0
     @State private var currentWordIndex: Int = 0
-    @State private var imageName: String = "flower8"
-    @State private var playAgainHidden: Bool = true
-    @State private var playAgainButtonLabel: String = "Another Word?"
-    @State private var imageNumber: Int = 8
     @State private var revealedWord: String = ""
+    @State private var numberOfGamesAtThisLevel: Int = 0
+    // Button Controls
+    @State private var playAgainButtonLabel: String = ""
+    @State private var playAgainHidden: Bool = true
+    // Image Names
+    @State private var imageName: String = "flower8"
+    // Audio Player
     @State private var audioPlayer: AVAudioPlayer!
 
+    // State Change
     @FocusState private var textFieldIsFocused: Bool
 
+    fileprivate func setClearSlate() {
+        (wordsToGuess, numberOfGamesAtThisLevel) = loadWordsFor(level: currentLevel, game: currentGame)
+        wordToGuess = wordsToGuess[currentWordIndex]
+        gameStatusMessage = Self.messageHowManyGuesses
+        revealedWord = "_" + String(repeating: " _", count: wordToGuess.count - 1)
+        playAgainButtonLabel = Self.playAgainButtonLabelGuessALetter
+        playAgainHidden = true
+    }
+    
     var body: some View {
         VStack {
             HStack {
@@ -60,6 +81,7 @@ struct ContentView: View {
             Text(revealedWord)
                 .font(.title)
 
+            // Normal Play or Completion Processing
             if playAgainHidden {
                 HStack {
                     TextField("", text: $guessedLetter)
@@ -87,7 +109,8 @@ struct ContentView: View {
                             updateGamePlay()
                         }
 
-                    Button("Guess a Letter") {
+                    // Normal Play
+                    Button(playAgainButtonLabel) {
                         letterGuess()
                         updateGamePlay()
                     }
@@ -96,7 +119,12 @@ struct ContentView: View {
                     .disabled(guessedLetter.isEmpty)
                 }
             } else {
+                // Completion Process
                 Button(playAgainButtonLabel) {
+//                    if (currentWordIndex < wordsToGuess.count && currentLevel < Self.maxNumberOfLevelsInstalled && currentGame <  numberOfGamesAtThisLevel) {
+//                        playAgainButtonLabel = Self.playAgainButtonLabelAnotherWord
+//                        print("\nAre We Going to the Next LEVEL? \(currentLevel).\(currentGame)")
+//                    }
                     // Reset game for "Play Again?"
                     if (currentWordIndex == wordsToGuess.count) {
                         currentWordIndex = 0
@@ -105,14 +133,14 @@ struct ContentView: View {
                         playAgainButtonLabel = "Another Word?"
                      }
                     // Reload the words for the current level/game in case they changed
-                    wordsToGuess = loadWordsFor(level: currentLevel, game: currentGame)
+                    (wordsToGuess, numberOfGamesAtThisLevel) = loadWordsFor(level: currentLevel, game: currentGame)
                     // Reset game after word was guessed or missed (also if "Play Again?")
                     wordToGuess = wordsToGuess[currentWordIndex]
                     revealedWord = "_" + String(repeating: " _", count: wordToGuess.count - 1)
                     lettersGuessed = ""
                     guessesRemaining = Self.maxNumberOfGuesses
                     imageName = "flower\(guessesRemaining)"
-                    gameStatusMessage = "How Many Guesses to Uncover the Hidden Word?"
+                    gameStatusMessage = Self.messageHowManyGuesses
                     playAgainHidden = true
                 }
                 .buttonStyle(.borderedProminent)
@@ -129,21 +157,24 @@ struct ContentView: View {
         }
         .ignoresSafeArea(edges: .bottom)
         .onAppear {
-            wordsToGuess = loadWordsFor(level: currentLevel, game: currentGame)
-            wordToGuess = wordsToGuess[currentWordIndex]
-            revealedWord = "_" + String(repeating: " _", count: wordToGuess.count - 1)
+            setClearSlate()
         }
     }
-
-    func loadWordsFor(level: Int, game: Int) -> [String] {
-        let fileName = "WordsLevel\(level + 1)Game\(game + 1)"
+    
+    struct LevelWordList: Decodable {
+        let games: [[String]]
+    }
+    func loadWordsFor(level: Int, game: Int) -> ([String], Int) {
+        let fileName = "WordsLevel\(level)"
         guard let url = Bundle.main.url(forResource: fileName, withExtension: "json"),
               let data = try? Data(contentsOf: url),
-              let words = try? JSONDecoder().decode([String].self, from: data) else {
+              let levelData = try? JSONDecoder().decode(LevelWordList.self, from: data) else {
             print("Could not load \(fileName).json")
-            return []
+            return ([], 0)
         }
-        return words
+        // Defensive: if requested game index is out of bounds, return an empty list
+        let words = game < levelData.games.count ? levelData.games[game] : []
+        return (words, levelData.games.count)
     }
 
     func letterGuess() {

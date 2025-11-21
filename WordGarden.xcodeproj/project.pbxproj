@@ -15,32 +15,16 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				Resources/WordsLevel2Game2.json,
-				Resources/WordsLevel3Game1.json,
-				Resources/WordsLevel3Game2.json,
 			);
 			target = DA77F4A52ECE7F3D00706364 /* WordGarden */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		DA227A6A2ED0D36400FCF172 /* Exceptions for "WordGarden" folder in "Compile Sources" phase from "WordGarden" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = DA77F4A22ECE7F3D00706364 /* Sources */;
-			membershipExceptions = (
-				Resources/WordsLevel2Game2.json,
-				Resources/WordsLevel3Game1.json,
-				Resources/WordsLevel3Game2.json,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DA77F4A82ECE7F3D00706364 /* WordGarden */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				DA77F4B52ECE802F00706364 /* Exceptions for "WordGarden" folder in "WordGarden" target */,
-				DA227A6A2ED0D36400FCF172 /* Exceptions for "WordGarden" folder in "Compile Sources" phase from "WordGarden" target */,
 			);
 			path = WordGarden;
 			sourceTree = "<group>";

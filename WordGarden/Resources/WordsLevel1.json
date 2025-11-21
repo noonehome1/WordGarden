@@ -1,1 +1,9 @@
-["ACCIDENT", "BALANCE", "BRAIN", "CHEER", "CORNER", "DEMOLISH", "ENEMY", "FLAP", "GIFT", "ISLAND", "MOTOR"]
+{
+    "games": [
+        ["ACCIDENT", "BALANCE", "BRAIN", "CHEER"],
+        ["CORNER", "DEMOLISH", "ENEMY", "FLAP"],
+        ["GIFT", "ISLAND", "MOTOR", "AGREE"],
+        ["BANNER", "BRANCH", "CHEW", "COUPLE", "DESIGN"],
+        ["EXACTLY", "FLOAT", "GRAVITY", "LEADER", "NERVOUS"]
+    ]
+}
