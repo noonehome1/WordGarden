@@ -1,0 +1,5 @@
+{
+    "maxGames": 2
+    "Game1": ["CAT", "DOG", "PIG", "BAT", "COW"]
+    "Game2": ["SHEEP", "LION", "TIGER", "BEAR", "GOAT"]
+}
